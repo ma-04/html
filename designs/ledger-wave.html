@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ledger Wave</title>
+    <link rel="stylesheet" href="../assets/shared.css" />
+    <script defer src="../assets/shared.js"></script>
+    <style>
+      :root {
+        --accent: #ff9961;
+        --paper: #fff8f1;
+        --ink: #281d17;
+        --muted: rgba(40, 29, 23, 0.68);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--ink);
+        font-family: "Avenir Next", "Segoe UI", sans-serif;
+        background:
+          radial-gradient(circle at top right, rgba(255, 153, 97, 0.18), transparent 26%),
+          radial-gradient(circle at bottom left, rgba(255, 211, 165, 0.32), transparent 28%),
+          linear-gradient(180deg, #fff8f1 0%, #f6ebe0 100%);
+      }
+
+      .page {
+        width: min(1180px, calc(100vw - 2rem));
+        margin: 0 auto;
+        padding: 1.4rem 0 3rem;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: 1.2rem;
+        margin-bottom: 1.2rem;
+      }
+
+      .panel {
+        border: 1px solid rgba(40, 29, 23, 0.08);
+        border-radius: 1.8rem;
+        background: rgba(255, 255, 255, 0.74);
+        box-shadow: 0 24px 60px rgba(80, 53, 36, 0.08);
+      }
+
+      .intro {
+        padding: 2rem;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.75rem 1rem;
+        border-radius: 999px;
+        background: rgba(255, 153, 97, 0.11);
+        color: #b85a28;
+        font: 700 0.78rem/1 "SFMono-Regular", "IBM Plex Mono", Consolas, monospace;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 1rem 0;
+        max-width: 11ch;
+        font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+        font-size: clamp(3rem, 6vw, 5.2rem);
+        line-height: 0.93;
+      }
+
+      .intro p {
+        margin: 0 0 1.3rem;
+        color: var(--muted);
+        line-height: 1.75;
+      }
+
+      .quote {
+        padding: 1rem 1.1rem;
+        border-left: 4px solid var(--accent);
+        background: rgba(255, 153, 97, 0.06);
+        color: rgba(40, 29, 23, 0.85);
+      }
+
+      .calculator {
+        padding: 1.6rem;
+      }
+
+      .scenario-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+      }
+
+      .scenario-row button {
+        padding: 0.8rem 1rem;
+        border: 1px solid rgba(40, 29, 23, 0.12);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.8);
+        color: var(--ink);
+        cursor: pointer;
+        font: 600 0.92rem/1 "Avenir Next", "Segoe UI", sans-serif;
+        transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+      }
+
+      .scenario-row button.is-active,
+      .scenario-row button:hover,
+      .scenario-row button:focus-visible {
+        outline: none;
+        transform: translateY(-2px);
+        background: rgba(255, 153, 97, 0.12);
+        border-color: rgba(255, 153, 97, 0.3);
+      }
+
+      .controls {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .control {
+        padding: 1rem 1rem 1.1rem;
+        border-radius: 1.2rem;
+        background: rgba(40, 29, 23, 0.04);
+      }
+
+      .control-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        align-items: baseline;
+      }
+
+      .control span {
+        color: var(--muted);
+      }
+
+      .control output {
+        font-weight: 700;
+      }
+
+      input[type="range"] {
+        width: 100%;
+        margin-top: 0.9rem;
+        accent-color: var(--accent);
+      }
+
+      .results {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.85rem;
+        margin-top: 1.1rem;
+      }
+
+      .result {
+        padding: 1rem;
+        border-radius: 1.2rem;
+        background: rgba(255, 255, 255, 0.82);
+      }
+
+      .result strong {
+        display: block;
+        margin-bottom: 0.3rem;
+        font-size: 1.7rem;
+      }
+
+      .result span {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .chart-wrap {
+        display: grid;
+        grid-template-columns: 0.95fr 1.05fr;
+        gap: 1.2rem;
+      }
+
+      .narrative,
+      .bars {
+        padding: 1.5rem;
+      }
+
+      .narrative h2,
+      .bars h2 {
+        margin: 0 0 0.8rem;
+        font-size: 1.55rem;
+      }
+
+      .narrative p {
+        margin: 0 0 1rem;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .bullets {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 0.75rem;
+      }
+
+      .bullets li {
+        padding: 1rem;
+        border-radius: 1rem;
+        background: rgba(255, 153, 97, 0.06);
+      }
+
+      .bar-list {
+        display: grid;
+        gap: 0.8rem;
+      }
+
+      .bar {
+        padding: 0.95rem;
+        border-radius: 1rem;
+        background: rgba(40, 29, 23, 0.04);
+      }
+
+      .bar-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 0.6rem;
+      }
+
+      .bar-track {
+        height: 0.7rem;
+        border-radius: 999px;
+        background: rgba(40, 29, 23, 0.08);
+        overflow: hidden;
+      }
+
+      .bar-fill {
+        height: 100%;
+        width: var(--size, 50%);
+        border-radius: inherit;
+        background: linear-gradient(90deg, #ff9961, #ffd17d);
+        transition: width 220ms ease;
+      }
+
+      @media (max-width: 980px) {
+        .hero,
+        .chart-wrap {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 760px) {
+        .page {
+          width: min(100vw - 1rem, 100%);
+        }
+
+        .intro,
+        .calculator,
+        .narrative,
+        .bars {
+          padding: 1.2rem;
+          border-radius: 1.3rem;
+        }
+
+        .results {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero">
+        <article class="panel intro">
+          <div class="eyebrow">Business case lens</div>
+          <h1>Quantify what full model ownership is actually worth.</h1>
+          <p>
+            This concept sells the platform by reframing the decision: not "can we call an
+            API?" but "how much value leaks out if our prompts, weights, and evaluator loops
+            belong to someone else?"
+          </p>
+          <div class="quote" data-quote>
+            "Every internal correction cycle should make our own model better, not improve a
+            public vendor's moat."
+          </div>
+        </article>
+
+        <aside class="panel calculator">
+          <div class="scenario-row">
+            <button class="is-active" type="button" data-scenario="banking">Banking</button>
+            <button type="button" data-scenario="pharma">Pharma</button>
+            <button type="button" data-scenario="insurance">Insurance</button>
+          </div>
+
+          <div class="controls">
+            <label class="control">
+              <div class="control-head">
+                <strong>Knowledge workers</strong>
+                <output data-workers-output>180</output>
+              </div>
+              <span>Teams using the private LLM estate daily.</span>
+              <input type="range" min="50" max="500" step="10" value="180" data-workers />
+            </label>
+
+            <label class="control">
+              <div class="control-head">
+                <strong>Daily requests</strong>
+                <output data-requests-output>42000</output>
+              </div>
+              <span>Total prompts and retrieval calls per day.</span>
+              <input type="range" min="10000" max="120000" step="2000" value="42000" data-requests />
+            </label>
+
+            <label class="control">
+              <div class="control-head">
+                <strong>Model refreshes per quarter</strong>
+                <output data-refresh-output>3</output>
+              </div>
+              <span>How often you tune, benchmark, and promote new checkpoints.</span>
+              <input type="range" min="1" max="6" step="1" value="3" data-refresh />
+            </label>
+          </div>
+
+          <div class="results">
+            <article class="result">
+              <strong data-savings>$0</strong>
+              <span>Annual value retained</span>
+            </article>
+            <article class="result">
+              <strong data-payback>0 mo</strong>
+              <span>Estimated payback</span>
+            </article>
+            <article class="result">
+              <strong data-incidents>0</strong>
+              <span>Leakage pathways removed</span>
+            </article>
+            <article class="result">
+              <strong data-ownership>0%</strong>
+              <span>Ownership score</span>
+            </article>
+          </div>
+        </aside>
+      </section>
+
+      <section class="chart-wrap">
+        <article class="panel narrative">
+          <h2 data-narrative-title>Banking narrative</h2>
+          <p data-narrative-copy>
+            Private models keep deal context, analyst behavior, and policy-aware feedback loops
+            in-house. That matters because the workflow itself becomes durable firm IP.
+          </p>
+          <ul class="bullets" data-bullets></ul>
+        </article>
+
+        <article class="panel bars">
+          <h2>Where the economics shift</h2>
+          <div class="bar-list">
+            <div class="bar">
+              <div class="bar-head">
+                <strong>Vendor spend displaced</strong>
+                <span data-bar-label="vendor">$0</span>
+              </div>
+              <div class="bar-track"><div class="bar-fill" data-bar="vendor"></div></div>
+            </div>
+            <div class="bar">
+              <div class="bar-head">
+                <strong>Review overhead removed</strong>
+                <span data-bar-label="review">$0</span>
+              </div>
+              <div class="bar-track"><div class="bar-fill" data-bar="review"></div></div>
+            </div>
+            <div class="bar">
+              <div class="bar-head">
+                <strong>Internal IP retained</strong>
+                <span data-bar-label="ip">$0</span>
+              </div>
+              <div class="bar-track"><div class="bar-fill" data-bar="ip"></div></div>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <script>
+      (() => {
+        const scenarios = {
+          banking: {
+            quote:
+              '"Every internal correction cycle should make our own model better, not improve a public vendor\'s moat."',
+            title: "Banking narrative",
+            copy:
+              "Private models keep deal context, analyst behavior, and policy-aware feedback loops in-house. That matters because the workflow itself becomes durable firm IP.",
+            bullets: [
+              ["Protect alpha", "Prompts and retrieval data never expose internal theses or client-sensitive flows."],
+              ["Compress approval cycles", "Security and compliance review the same infrastructure they already govern."],
+              ["Retain evaluator logic", "Your red-team tests and preference labels improve your own checkpoints only."],
+            ],
+            base: 5200,
+            incidentFactor: 5,
+            ownershipBase: 90,
+          },
+          pharma: {
+            quote:
+              '"Clinical prompts, assay summaries, and internal review notes should stay under the same governance as the source science."',
+            title: "Pharma narrative",
+            copy:
+              "Scientific teams benefit when protocols, literature synthesis, and internal model tuning happen inside the same governed environment as the regulated source material.",
+            bullets: [
+              ["Protect study context", "Sponsor data, trial notes, and internal protocols stay in-network."],
+              ["Accelerate medical review", "Subject matter experts correct model behavior without creating external data trails."],
+              ["Own therapeutic specialization", "Every tuning cycle deepens your organization-specific reasoning asset."],
+            ],
+            base: 6100,
+            incidentFactor: 6,
+            ownershipBase: 92,
+          },
+          insurance: {
+            quote:
+              '"Claims language, fraud indicators, and adjuster judgment should become a private operating advantage."',
+            title: "Insurance narrative",
+            copy:
+              "Claims, underwriting, and servicing teams see the payoff when private-domain reasoning reduces manual review while keeping fraud features and policy interpretation internal.",
+            bullets: [
+              ["Keep fraud patterns private", "Shared APIs never see the prompts or evidence chains behind sensitive cases."],
+              ["Improve adjuster throughput", "Retrieval and model serving stay close to internal policy systems."],
+              ["Institutionalize expertise", "Human corrections become a reusable enterprise asset rather than external telemetry."],
+            ],
+            base: 4600,
+            incidentFactor: 4,
+            ownershipBase: 88,
+          },
+        };
+
+        const buttons = [...document.querySelectorAll("[data-scenario]")];
+        const workers = document.querySelector("[data-workers]");
+        const requests = document.querySelector("[data-requests]");
+        const refresh = document.querySelector("[data-refresh]");
+        const workersOutput = document.querySelector("[data-workers-output]");
+        const requestsOutput = document.querySelector("[data-requests-output]");
+        const refreshOutput = document.querySelector("[data-refresh-output]");
+        const savings = document.querySelector("[data-savings]");
+        const payback = document.querySelector("[data-payback]");
+        const incidents = document.querySelector("[data-incidents]");
+        const ownership = document.querySelector("[data-ownership]");
+        const quote = document.querySelector("[data-quote]");
+        const narrativeTitle = document.querySelector("[data-narrative-title]");
+        const narrativeCopy = document.querySelector("[data-narrative-copy]");
+        const bullets = document.querySelector("[data-bullets]");
+        const barNodes = {
+          vendor: document.querySelector('[data-bar="vendor"]'),
+          review: document.querySelector('[data-bar="review"]'),
+          ip: document.querySelector('[data-bar="ip"]'),
+        };
+        const barLabels = {
+          vendor: document.querySelector('[data-bar-label="vendor"]'),
+          review: document.querySelector('[data-bar-label="review"]'),
+          ip: document.querySelector('[data-bar-label="ip"]'),
+        };
+
+        let currentScenario = "banking";
+
+        function formatCurrency(value) {
+          return new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD",
+            maximumFractionDigits: 0,
+          }).format(value);
+        }
+
+        function renderScenario() {
+          const item = scenarios[currentScenario];
+          quote.textContent = item.quote;
+          narrativeTitle.textContent = item.title;
+          narrativeCopy.textContent = item.copy;
+          bullets.innerHTML = item.bullets
+            .map(
+              ([title, copy]) => `
+                <li>
+                  <strong>${title}</strong>
+                  <div style="color: var(--muted); margin-top: 0.3rem;">${copy}</div>
+                </li>
+              `
+            )
+            .join("");
+          buttons.forEach((button) => {
+            button.classList.toggle("is-active", button.dataset.scenario === currentScenario);
+          });
+        }
+
+        function recalculate() {
+          const item = scenarios[currentScenario];
+          const workerCount = Number(workers.value);
+          const dailyRequests = Number(requests.value);
+          const refreshes = Number(refresh.value);
+          const spend = workerCount * item.base + dailyRequests * 18 + refreshes * 220000;
+          const retained = Math.round(spend * 0.34);
+          const paybackMonths = Math.max(4, Math.round(18 - workerCount / 40 - refreshes));
+          const removedPathways = Math.round(item.incidentFactor + dailyRequests / 18000 + refreshes * 0.8);
+          const ownershipScore = Math.min(100, item.ownershipBase + refreshes + Math.round(workerCount / 180));
+          const vendorShare = Math.round(retained * 0.42);
+          const reviewShare = Math.round(retained * 0.23);
+          const ipShare = Math.round(retained * 0.35);
+
+          workersOutput.textContent = workerCount;
+          requestsOutput.textContent = dailyRequests;
+          refreshOutput.textContent = refreshes;
+          savings.textContent = formatCurrency(retained);
+          payback.textContent = `${paybackMonths} mo`;
+          incidents.textContent = removedPathways;
+          ownership.textContent = `${ownershipScore}%`;
+
+          const maxBar = Math.max(vendorShare, reviewShare, ipShare);
+          const barData = {
+            vendor: vendorShare,
+            review: reviewShare,
+            ip: ipShare,
+          };
+
+          Object.entries(barData).forEach(([key, value]) => {
+            barNodes[key].style.setProperty("--size", `${Math.max(18, (value / maxBar) * 100)}%`);
+            barLabels[key].textContent = formatCurrency(value);
+          });
+        }
+
+        buttons.forEach((button) => {
+          button.addEventListener("click", () => {
+            currentScenario = button.dataset.scenario;
+            renderScenario();
+            recalculate();
+          });
+        });
+
+        [workers, requests, refresh].forEach((input) => input.addEventListener("input", recalculate));
+
+        renderScenario();
+        recalculate();
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Atlas Console</title>
+    <link rel="stylesheet" href="../assets/shared.css" />
+    <script defer src="../assets/shared.js"></script>
+    <style>
+      :root {
+        --accent: #5e87ff;
+        --ink: #162037;
+        --paper: #f7f5ef;
+        --muted: rgba(22, 32, 55, 0.66);
+        --line: rgba(22, 32, 55, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--ink);
+        font-family: "Avenir Next", "Segoe UI", sans-serif;
+        background:
+          linear-gradient(rgba(22, 32, 55, 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(22, 32, 55, 0.05) 1px, transparent 1px),
+          linear-gradient(180deg, #fffdf7 0%, #f5f2e7 100%);
+        background-size: 32px 32px, 32px 32px, auto;
+      }
+
+      .page {
+        width: min(1200px, calc(100vw - 2rem));
+        margin: 0 auto;
+        padding: 1.4rem 0 3rem;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 1fr 0.95fr;
+        gap: 1.25rem;
+        margin-bottom: 1.25rem;
+      }
+
+      .panel {
+        border: 1px solid var(--line);
+        border-radius: 1.8rem;
+        background: rgba(255, 255, 255, 0.72);
+        backdrop-filter: blur(10px);
+      }
+
+      .copy {
+        padding: 2rem;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.72rem 1rem;
+        border-radius: 999px;
+        background: rgba(94, 135, 255, 0.08);
+        color: var(--accent);
+        font: 700 0.78rem/1 "SFMono-Regular", "IBM Plex Mono", Consolas, monospace;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 1rem 0;
+        max-width: 11ch;
+        font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+        font-size: clamp(3rem, 6vw, 5.2rem);
+        line-height: 0.94;
+      }
+
+      .copy p {
+        margin: 0 0 1.4rem;
+        max-width: 58ch;
+        color: var(--muted);
+        line-height: 1.75;
+      }
+
+      .points {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.75rem;
+      }
+
+      .point {
+        padding: 1rem;
+        border-radius: 1.1rem;
+        background: rgba(94, 135, 255, 0.06);
+      }
+
+      .point strong {
+        display: block;
+        margin-bottom: 0.35rem;
+        font-size: 1.4rem;
+      }
+
+      .point span {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .planner {
+        padding: 1.5rem;
+      }
+
+      .planner h2,
+      .details h2 {
+        margin: 0 0 1rem;
+        font-size: 1.55rem;
+      }
+
+      .topology {
+        position: relative;
+        display: grid;
+        gap: 0.9rem;
+      }
+
+      .stage-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.9rem;
+      }
+
+      .stage {
+        position: relative;
+        padding: 1.1rem;
+        border: 1px solid var(--line);
+        border-radius: 1.2rem;
+        background: rgba(255, 255, 255, 0.84);
+        cursor: pointer;
+        transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+      }
+
+      .stage:hover,
+      .stage:focus-visible,
+      .stage.is-active {
+        outline: none;
+        transform: translateY(-3px);
+        border-color: color-mix(in srgb, var(--accent) 48%, var(--line));
+        box-shadow: 0 18px 40px rgba(94, 135, 255, 0.12);
+      }
+
+      .stage small {
+        display: inline-block;
+        margin-bottom: 0.55rem;
+        color: var(--accent);
+        font: 700 0.74rem/1 "SFMono-Regular", "IBM Plex Mono", Consolas, monospace;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .stage strong {
+        display: block;
+        margin-bottom: 0.4rem;
+      }
+
+      .stage span {
+        color: var(--muted);
+        line-height: 1.55;
+      }
+
+      .capacity {
+        padding: 1rem 1.1rem;
+        border-radius: 1.2rem;
+        background: rgba(22, 32, 55, 0.04);
+      }
+
+      .capacity-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        align-items: baseline;
+      }
+
+      .capacity output {
+        color: var(--accent);
+        font: 700 1.8rem/1 "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+      }
+
+      input[type="range"] {
+        width: 100%;
+        margin: 1rem 0;
+        accent-color: var(--accent);
+      }
+
+      .capacity-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.75rem;
+      }
+
+      .mini {
+        padding: 0.9rem;
+        border-radius: 1rem;
+        background: rgba(255, 255, 255, 0.88);
+      }
+
+      .mini span {
+        display: block;
+        margin-bottom: 0.3rem;
+        color: var(--muted);
+        font-size: 0.84rem;
+      }
+
+      .details {
+        display: grid;
+        grid-template-columns: 0.92fr 1.08fr;
+        gap: 1.25rem;
+      }
+
+      .inspector,
+      .checklist {
+        padding: 1.5rem;
+      }
+
+      .inspector p {
+        margin: 0 0 1rem;
+        color: var(--muted);
+        line-height: 1.75;
+      }
+
+      .spec-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+      }
+
+      .spec {
+        padding: 1rem;
+        border-radius: 1rem;
+        background: rgba(94, 135, 255, 0.06);
+      }
+
+      .spec span {
+        display: block;
+        margin-bottom: 0.35rem;
+        color: var(--muted);
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+
+      .checklist ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 0.75rem;
+      }
+
+      .checklist li {
+        padding: 1rem;
+        border-radius: 1rem;
+        background: rgba(22, 32, 55, 0.04);
+      }
+
+      .checklist li strong {
+        display: block;
+        margin-bottom: 0.35rem;
+      }
+
+      .checklist li span {
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      @media (max-width: 980px) {
+        .hero,
+        .details {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 760px) {
+        .page {
+          width: min(100vw - 1rem, 100%);
+        }
+
+        .copy,
+        .planner,
+        .inspector,
+        .checklist {
+          padding: 1.2rem;
+          border-radius: 1.3rem;
+        }
+
+        .points,
+        .stage-grid,
+        .capacity-grid,
+        .spec-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero">
+        <article class="panel copy">
+          <div class="eyebrow">Private architecture explainer</div>
+          <h1>Map sovereign LLM deployment like an operator, not a buyer.</h1>
+          <p>
+            This concept turns the offer into a systems narrative. Explore the internal
+            lifecycle of a domain-specific model estate and show buyers exactly where
+            ownership, auditability, and data residency stay under their control.
+          </p>
+          <div class="points">
+            <div class="point">
+              <strong>4</strong>
+              <span>Core lifecycle stages</span>
+            </div>
+            <div class="point">
+              <strong>0</strong>
+              <span>External prompt surfaces</span>
+            </div>
+            <div class="point">
+              <strong>1 stack</strong>
+              <span>Operated entirely in your VPC</span>
+            </div>
+          </div>
+        </article>
+
+        <aside class="panel planner">
+          <h2>Architecture stages</h2>
+          <div class="topology">
+            <div class="stage-grid" data-stage-grid>
+              <button class="stage is-active" type="button" data-stage="ingest">
+                <small>01</small>
+                <strong>Ingest</strong>
+                <span>Private collection, chunking, policy labeling, and access tagging.</span>
+              </button>
+              <button class="stage" type="button" data-stage="tune">
+                <small>02</small>
+                <strong>Tune</strong>
+                <span>Fine-tune and evaluate weights with your own feedback assets.</span>
+              </button>
+              <button class="stage" type="button" data-stage="deploy">
+                <small>03</small>
+                <strong>Deploy</strong>
+                <span>Serve inference behind internal gateways, guardrails, and quotas.</span>
+              </button>
+              <button class="stage" type="button" data-stage="audit">
+                <small>04</small>
+                <strong>Audit</strong>
+                <span>Track lineage, red-team signals, and policy changes from one console.</span>
+              </button>
+            </div>
+
+            <div class="capacity">
+              <div class="capacity-head">
+                <div>
+                  <strong>Capacity planner</strong>
+                  <div style="color: var(--muted); margin-top: 0.3rem;">Scale the private estate for your workload.</div>
+                </div>
+                <output data-gpu-output>16 GPUs</output>
+              </div>
+              <input type="range" min="4" max="48" step="4" value="16" data-gpu-range />
+              <div class="capacity-grid">
+                <div class="mini">
+                  <span>Daily throughput</span>
+                  <strong data-throughput>288M tokens</strong>
+                </div>
+                <div class="mini">
+                  <span>Private clusters</span>
+                  <strong data-clusters>2 clusters</strong>
+                </div>
+                <div class="mini">
+                  <span>P95 latency</span>
+                  <strong data-latency>620 ms</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="details">
+        <article class="panel inspector">
+          <h2 data-title>Ingest stage</h2>
+          <p data-copy>
+            Build the domain memory layer inside your own boundary so access policies,
+            residency rules, and source-of-truth systems stay aligned from the start.
+          </p>
+          <div class="spec-grid">
+            <div class="spec">
+              <span>Primary owner</span>
+              <strong data-owner>Platform engineering</strong>
+            </div>
+            <div class="spec">
+              <span>Critical output</span>
+              <strong data-output>Tagged private corpus</strong>
+            </div>
+            <div class="spec">
+              <span>Residency rule</span>
+              <strong data-residency>Data never leaves region</strong>
+            </div>
+            <div class="spec">
+              <span>Control plane</span>
+              <strong data-control>IAM + network policy</strong>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel checklist">
+          <h2>What the buyer understands instantly</h2>
+          <ul data-checklist></ul>
+        </article>
+      </section>
+    </main>
+
+    <script>
+      (() => {
+        const stageData = {
+          ingest: {
+            title: "Ingest stage",
+            copy:
+              "Build the domain memory layer inside your own boundary so access policies, residency rules, and source-of-truth systems stay aligned from the start.",
+            owner: "Platform engineering",
+            output: "Tagged private corpus",
+            residency: "Data never leaves region",
+            control: "IAM + network policy",
+            checklist: [
+              ["Source systems stay private", "Ingestion workers operate on the same trusted network as your internal repositories."],
+              ["Access tags remain enforceable", "Chunk-level entitlements can inherit your existing authorization model."],
+              ["Residency is verifiable", "There is no dependency on a third-party shared storage or retrieval layer."],
+            ],
+          },
+          tune: {
+            title: "Tune stage",
+            copy:
+              "Adapt base models with your prompts, labels, human preference data, and evaluator suites so performance improvements remain a proprietary asset.",
+            owner: "Model operations",
+            output: "Enterprise-owned checkpoint",
+            residency: "Weights remain in VPC",
+            control: "Private training jobs",
+            checklist: [
+              ["Feedback compounds internally", "Your correction loops and evaluator outputs are never absorbed into someone else's platform."],
+              ["Release cadence is controlled", "Upgrade and rollback decisions stay with your operators and governance board."],
+              ["Benchmarking becomes repeatable", "Evaluation jobs run against the same private data slices each time."],
+            ],
+          },
+          deploy: {
+            title: "Deploy stage",
+            copy:
+              "Serve inference behind internal gateways, retrieval layers, and policy middleware with quotas, observability, and routing defined by your own platform.",
+            owner: "SRE + security",
+            output: "Private inference endpoint",
+            residency: "Traffic never leaves VPC",
+            control: "Gateway + policy engine",
+            checklist: [
+              ["Prompt surfaces stay closed", "Users and apps hit your endpoint, not a public shared API."],
+              ["Controls are first-class", "Rate limits, content policies, and routing live in the same platform tier as the model."],
+              ["Latency stays predictable", "Inference sits near your private retrieval and application stack."],
+            ],
+          },
+          audit: {
+            title: "Audit stage",
+            copy:
+              "Keep lineage, red-team output, evaluator drift, and policy changes in one record so ownership extends beyond the model into the operating process.",
+            owner: "Security + governance",
+            output: "Full change history",
+            residency: "Logs remain customer-held",
+            control: "Internal SIEM and review",
+            checklist: [
+              ["Evidence is easy to produce", "Answers, sources, prompts, and policy versions can all be tied together."],
+              ["Risk review stays internal", "Security teams review sovereign logs rather than vendor dashboards."],
+              ["Controls improve over time", "Audits feed directly back into new guardrails and evaluation sets."],
+            ],
+          },
+        };
+
+        const range = document.querySelector("[data-gpu-range]");
+        const gpuOutput = document.querySelector("[data-gpu-output]");
+        const throughput = document.querySelector("[data-throughput]");
+        const clusters = document.querySelector("[data-clusters]");
+        const latency = document.querySelector("[data-latency]");
+        const stageButtons = [...document.querySelectorAll("[data-stage]")];
+        const title = document.querySelector("[data-title]");
+        const copy = document.querySelector("[data-copy]");
+        const owner = document.querySelector("[data-owner]");
+        const output = document.querySelector("[data-output]");
+        const residency = document.querySelector("[data-residency]");
+        const control = document.querySelector("[data-control]");
+        const checklist = document.querySelector("[data-checklist]");
+
+        function renderStage(key) {
+          const item = stageData[key];
+          title.textContent = item.title;
+          copy.textContent = item.copy;
+          owner.textContent = item.owner;
+          output.textContent = item.output;
+          residency.textContent = item.residency;
+          control.textContent = item.control;
+          checklist.innerHTML = item.checklist
+            .map(
+              ([label, desc]) => `
+                <li>
+                  <strong>${label}</strong>
+                  <span>${desc}</span>
+                </li>
+              `
+            )
+            .join("");
+
+          stageButtons.forEach((button) => {
+            button.classList.toggle("is-active", button.dataset.stage === key);
+          });
+        }
+
+        function renderCapacity() {
+          const gpuCount = Number(range.value);
+          const throughputValue = gpuCount * 18;
+          const clusterCount = Math.max(1, Math.ceil(gpuCount / 8));
+          const latencyValue = Math.max(180, 760 - gpuCount * 8);
+
+          gpuOutput.textContent = `${gpuCount} GPUs`;
+          throughput.textContent = `${throughputValue}M tokens`;
+          clusters.textContent = `${clusterCount} clusters`;
+          latency.textContent = `${latencyValue} ms`;
+        }
+
+        stageButtons.forEach((button) => {
+          button.addEventListener("click", () => renderStage(button.dataset.stage));
+        });
+
+        range.addEventListener("input", renderCapacity);
+
+        renderStage("ingest");
+        renderCapacity();
+      })();
+    </script>
+  </body>
+</html>

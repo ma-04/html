@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Signal Brief</title>
+    <link rel="stylesheet" href="../assets/shared.css" />
+    <script defer src="../assets/shared.js"></script>
+    <style>
+      :root {
+        --accent: #00e1ff;
+        --bg: #f2f2eb;
+        --ink: #10161c;
+        --muted: rgba(16, 22, 28, 0.66);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--ink);
+        font-family: "Avenir Next Condensed", "Avenir Next", "Segoe UI", sans-serif;
+        background:
+          linear-gradient(135deg, rgba(0, 225, 255, 0.08), transparent 28%),
+          linear-gradient(180deg, #f2f2eb 0%, #e6e6da 100%);
+      }
+
+      .page {
+        width: min(1180px, calc(100vw - 2rem));
+        margin: 0 auto;
+        padding: 1.4rem 0 3rem;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 0.92fr 1.08fr;
+        gap: 1.2rem;
+        margin-bottom: 1.2rem;
+      }
+
+      .block {
+        border: 2px solid #10161c;
+        border-radius: 1.5rem;
+        background: rgba(255, 255, 255, 0.72);
+        box-shadow: 10px 10px 0 #10161c;
+      }
+
+      .intro,
+      .builder,
+      .timeline,
+      .faq {
+        padding: 1.7rem;
+      }
+
+      .stamp {
+        display: inline-block;
+        padding: 0.6rem 0.85rem;
+        background: var(--accent);
+        color: #001217;
+        font: 800 0.8rem/1 "SFMono-Regular", "IBM Plex Mono", Consolas, monospace;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 1rem 0;
+        max-width: 10ch;
+        font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+        font-size: clamp(3rem, 6vw, 5.6rem);
+        line-height: 0.9;
+        text-transform: uppercase;
+      }
+
+      .intro p,
+      .builder p,
+      .faq p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .builder {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .selector {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.7rem;
+      }
+
+      .selector button {
+        padding: 0.8rem 0.95rem;
+        border: 2px solid #10161c;
+        background: #fffef8;
+        color: var(--ink);
+        cursor: pointer;
+        font: 700 0.92rem/1 "Avenir Next", "Segoe UI", sans-serif;
+        transition: transform 180ms ease, background 180ms ease;
+      }
+
+      .selector button.is-active,
+      .selector button:hover,
+      .selector button:focus-visible {
+        outline: none;
+        transform: translate(-2px, -2px);
+        background: var(--accent);
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.8rem;
+      }
+
+      .stat {
+        padding: 1rem;
+        border: 2px solid #10161c;
+        background: #fffef8;
+      }
+
+      .stat strong {
+        display: block;
+        margin-bottom: 0.35rem;
+        font-size: 1.5rem;
+      }
+
+      .timeline-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.8rem;
+        margin-top: 1rem;
+      }
+
+      .phase {
+        min-height: 15rem;
+        padding: 1rem;
+        border: 2px solid #10161c;
+        background: #fffef8;
+      }
+
+      .phase small {
+        display: inline-block;
+        margin-bottom: 0.55rem;
+        padding: 0.35rem 0.5rem;
+        background: #10161c;
+        color: #fffef8;
+        font: 700 0.72rem/1 "SFMono-Regular", "IBM Plex Mono", Consolas, monospace;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .phase p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .faq-list {
+        display: grid;
+        gap: 0.8rem;
+        margin-top: 1rem;
+      }
+
+      .faq-item {
+        border: 2px solid #10161c;
+        background: #fffef8;
+      }
+
+      .faq-item button {
+        width: 100%;
+        padding: 1rem;
+        border: 0;
+        border-bottom: 2px solid #10161c;
+        background: transparent;
+        text-align: left;
+        color: var(--ink);
+        cursor: pointer;
+        font: 700 1rem/1.4 "Avenir Next", "Segoe UI", sans-serif;
+      }
+
+      .faq-item div {
+        display: none;
+        padding: 1rem;
+      }
+
+      .faq-item.is-open div {
+        display: block;
+      }
+
+      @media (max-width: 980px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 760px) {
+        .page {
+          width: min(100vw - 1rem, 100%);
+        }
+
+        .intro,
+        .builder,
+        .timeline,
+        .faq {
+          padding: 1.2rem;
+          border-radius: 1.1rem;
+          box-shadow: 6px 6px 0 #10161c;
+        }
+
+        .stats,
+        .timeline-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero">
+        <article class="block intro">
+          <div class="stamp">Deployment sprint</div>
+          <h1>Own the model. Own the boundary. Ship on your timeline.</h1>
+          <p>
+            This direction turns the offer into a launch plan. Buyers choose rollout speed
+            and industry context, then see a concrete deployment narrative built entirely
+            around private infrastructure, sovereign data handling, and customer-owned models.
+          </p>
+        </article>
+
+        <aside class="block builder">
+          <div>
+            <strong>Launch speed</strong>
+            <div class="selector" style="margin-top: 0.8rem;">
+              <button class="is-active" type="button" data-speed="pilot">Pilot / 30 days</button>
+              <button type="button" data-speed="production">Production / 60 days</button>
+              <button type="button" data-speed="global">Global / 90 days</button>
+            </div>
+          </div>
+
+          <div>
+            <strong>Industry pack</strong>
+            <div class="selector" style="margin-top: 0.8rem;">
+              <button class="is-active" type="button" data-industry="legal">Legal</button>
+              <button type="button" data-industry="manufacturing">Manufacturing</button>
+              <button type="button" data-industry="public">Public sector</button>
+            </div>
+          </div>
+
+          <p data-brief>
+            Launch a private legal reasoning pilot with secure document retrieval, counsel-specific
+            prompts, and customer-owned evaluation inside 30 days.
+          </p>
+
+          <div class="stats">
+            <div class="stat">
+              <strong data-stat-residency>1 region</strong>
+              <span>Residency pattern</span>
+            </div>
+            <div class="stat">
+              <strong data-stat-ownership>100%</strong>
+              <span>Ownership retained</span>
+            </div>
+            <div class="stat">
+              <strong data-stat-users>80 users</strong>
+              <span>Initial operator scope</span>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="block timeline">
+        <div class="stamp">Roadmap</div>
+        <div class="timeline-grid" data-timeline-grid></div>
+      </section>
+
+      <section class="block faq" style="margin-top: 1.2rem;">
+        <div class="stamp">Objection handling</div>
+        <p style="margin-top: 1rem;">
+          A landing page still needs to answer the hard questions. These expandable blocks turn
+          the common enterprise concerns into short, direct proof points.
+        </p>
+        <div class="faq-list">
+          <article class="faq-item is-open">
+            <button type="button">Who owns the resulting model weights?</button>
+            <div>The customer does. Fine-tuned checkpoints, evaluator logic, prompt libraries, and deployment artifacts remain inside the customer's own environment.</div>
+          </article>
+          <article class="faq-item">
+            <button type="button">How do we avoid data leakage during tuning and inference?</button>
+            <div>Training jobs, retrieval pipelines, and inference endpoints run in the customer's VPC so prompts, source data, and telemetry never have to traverse a public shared model plane.</div>
+          </article>
+          <article class="faq-item">
+            <button type="button">Can this fit our existing security process?</button>
+            <div>Yes. The deployment model is designed to inherit customer IAM, network segmentation, logging, and audit review instead of asking teams to trust a separate vendor control plane.</div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      (() => {
+        const data = {
+          pilot: {
+            legal: {
+              brief:
+                "Launch a private legal reasoning pilot with secure document retrieval, counsel-specific prompts, and customer-owned evaluation inside 30 days.",
+              residency: "1 region",
+              ownership: "100%",
+              users: "80 users",
+              phases: [
+                ["Week 1", "Scope matter types, confirm residency rules, and map internal document systems."],
+                ["Week 2", "Build secure retrieval over precedent, policy, and contract repositories."],
+                ["Week 3", "Run evaluator sets with legal reviewers and refine guardrails in-network."],
+                ["Week 4", "Deploy pilot to a controlled user group behind customer IAM."],
+              ],
+            },
+            manufacturing: {
+              brief:
+                "Stand up a plant-intelligence pilot in 30 days with maintenance logs, manual retrieval, and operations-safe model routing inside your VPC.",
+              residency: "1 region",
+              ownership: "100%",
+              users: "120 users",
+              phases: [
+                ["Week 1", "Select plant systems, manuals, and operator roles for the first private corpus."],
+                ["Week 2", "Build internal retrieval over procedures, anomalies, and parts information."],
+                ["Week 3", "Tune prompts with engineering reviewers and plant safety constraints."],
+                ["Week 4", "Deploy to a pilot shift with observability routed to the customer stack."],
+              ],
+            },
+            public: {
+              brief:
+                "Deliver a public-sector pilot in 30 days with policy-grounded retrieval, internal review, and sovereign hosting from day one.",
+              residency: "1 sovereign zone",
+              ownership: "100%",
+              users: "60 users",
+              phases: [
+                ["Week 1", "Define policy domains, approved sources, and clearance-aware access rules."],
+                ["Week 2", "Stand up internal retrieval over memos, directives, and knowledge bases."],
+                ["Week 3", "Run evaluator suites with policy experts and tighten answer constraints."],
+                ["Week 4", "Release to a limited operator cohort under customer oversight."],
+              ],
+            },
+          },
+          production: {
+            legal: {
+              brief:
+                "Move legal workflows to production in 60 days with private checkpoint management, evaluator governance, and full internal auditability.",
+              residency: "2 regions",
+              ownership: "100%",
+              users: "240 users",
+              phases: [
+                ["Days 1-15", "Map sources, entitlements, and privileged matter access inside the customer VPC."],
+                ["Days 16-30", "Deploy retrieval, prompt controls, and reviewer workflows for legal experts."],
+                ["Days 31-45", "Promote customer-owned checkpoints with benchmark and red-team evidence."],
+                ["Days 46-60", "Launch production endpoints behind internal gateways and logging."],
+              ],
+            },
+            manufacturing: {
+              brief:
+                "Reach production manufacturing support in 60 days with private retrieval, OT-aware controls, and company-owned tuning loops.",
+              residency: "2 regions",
+              ownership: "100%",
+              users: "320 users",
+              phases: [
+                ["Days 1-15", "Connect manuals, work instructions, and quality findings inside the private estate."],
+                ["Days 16-30", "Configure routing, operator policies, and plant-specific prompt scaffolds."],
+                ["Days 31-45", "Benchmark failure-mode reasoning and promote tuned checkpoints."],
+                ["Days 46-60", "Deploy production assistants to engineering and support teams."],
+              ],
+            },
+            public: {
+              brief:
+                "Deploy a policy-grounded public-sector assistant in 60 days with sovereign operations, reviewable logs, and complete model custody.",
+              residency: "2 sovereign zones",
+              ownership: "100%",
+              users: "180 users",
+              phases: [
+                ["Days 1-15", "Confirm approved source systems, security roles, and residency requirements."],
+                ["Days 16-30", "Build retrieval, moderation, and workflow integrations inside the customer boundary."],
+                ["Days 31-45", "Run evaluator suites and governance review on customer-held evidence."],
+                ["Days 46-60", "Launch secure production access with internal operator training."],
+              ],
+            },
+          },
+          global: {
+            legal: {
+              brief:
+                "Roll out a global legal intelligence program in 90 days with private regional estates, internal registry replication, and unified governance.",
+              residency: "3 regions",
+              ownership: "100%",
+              users: "750 users",
+              phases: [
+                ["Days 1-20", "Align regional document stores, residency rules, and counsel entitlements."],
+                ["Days 21-45", "Deploy mirrored private retrieval and checkpoint management per region."],
+                ["Days 46-70", "Validate model behavior with region-specific evaluator and review workflows."],
+                ["Days 71-90", "Go live with a globally governed but customer-owned legal model estate."],
+              ],
+            },
+            manufacturing: {
+              brief:
+                "Roll out global plant intelligence in 90 days with regional VPC deployment, factory-specific retrieval, and customer-held checkpoint promotion.",
+              residency: "4 regions",
+              ownership: "100%",
+              users: "1100 users",
+              phases: [
+                ["Days 1-20", "Group plants, manuals, and OT access policies by region and business unit."],
+                ["Days 21-45", "Build private retrieval and checkpoint workflows for each factory cluster."],
+                ["Days 46-70", "Tune and benchmark model behavior with site experts and shared governance."],
+                ["Days 71-90", "Launch multi-region production with internal failover and audit controls."],
+              ],
+            },
+            public: {
+              brief:
+                "Build a multi-region sovereign public-sector deployment in 90 days with customer-operated control planes and policy-specific evaluation.",
+              residency: "4 sovereign zones",
+              ownership: "100%",
+              users: "520 users",
+              phases: [
+                ["Days 1-20", "Partition agencies, policy sets, and access requirements across sovereign environments."],
+                ["Days 21-45", "Deploy private retrieval, logging, and checkpoint governance per zone."],
+                ["Days 46-70", "Run agency-specific evaluator sets and governance signoff."],
+                ["Days 71-90", "Launch the sovereign model program with customer-held operations and audit."],
+              ],
+            },
+          },
+        };
+
+        const speedButtons = [...document.querySelectorAll("[data-speed]")];
+        const industryButtons = [...document.querySelectorAll("[data-industry]")];
+        const brief = document.querySelector("[data-brief]");
+        const timelineGrid = document.querySelector("[data-timeline-grid]");
+        const residency = document.querySelector("[data-stat-residency]");
+        const ownership = document.querySelector("[data-stat-ownership]");
+        const users = document.querySelector("[data-stat-users]");
+        const faqButtons = [...document.querySelectorAll(".faq-item button")];
+        let currentSpeed = "pilot";
+        let currentIndustry = "legal";
+
+        function render() {
+          const item = data[currentSpeed][currentIndustry];
+          brief.textContent = item.brief;
+          residency.textContent = item.residency;
+          ownership.textContent = item.ownership;
+          users.textContent = item.users;
+          timelineGrid.innerHTML = item.phases
+            .map(
+              ([label, copy]) => `
+                <article class="phase">
+                  <small>${label}</small>
+                  <strong style="display: block; margin-bottom: 0.55rem;">Execution step</strong>
+                  <p>${copy}</p>
+                </article>
+              `
+            )
+            .join("");
+
+          speedButtons.forEach((button) => {
+            button.classList.toggle("is-active", button.dataset.speed === currentSpeed);
+          });
+
+          industryButtons.forEach((button) => {
+            button.classList.toggle("is-active", button.dataset.industry === currentIndustry);
+          });
+        }
+
+        speedButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            currentSpeed = button.dataset.speed;
+            render();
+          });
+        });
+
+        industryButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            currentIndustry = button.dataset.industry;
+            render();
+          });
+        });
+
+        faqButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            button.parentElement.classList.toggle("is-open");
+          });
+        });
+
+        render();
+      })();
+    </script>
+  </body>
+</html>
