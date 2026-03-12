@@ -1093,13 +1093,13 @@ function initAmbient() {
     canvas.style.height = `${height}px`;
     context.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
 
-    const count = width < 720 ? 18 : 32;
+    const count = width < 720 ? 14 : 24;
     particles = Array.from({ length: count }, () => ({
       x: Math.random() * width,
       y: Math.random() * height,
       vx: (Math.random() - 0.5) * 0.35,
       vy: (Math.random() - 0.5) * 0.35,
-      size: Math.random() * 2.2 + 0.8,
+      size: Math.random() * 1.6 + 0.7,
     }));
   }
 
@@ -1121,7 +1121,7 @@ function initAmbient() {
       if (particle.y < -20) particle.y = height + 20;
       if (particle.y > height + 20) particle.y = -20;
 
-      context.fillStyle = `rgba(${r}, ${g}, ${b}, 0.18)`;
+      context.fillStyle = `rgba(${r}, ${g}, ${b}, 0.08)`;
       context.beginPath();
       context.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
       context.fill();
@@ -1132,8 +1132,8 @@ function initAmbient() {
         const dy = particle.y - other.y;
         const distance = Math.hypot(dx, dy);
 
-        if (distance < 160) {
-          context.strokeStyle = `rgba(${r}, ${g}, ${b}, ${0.12 - distance / 1600})`;
+        if (distance < 180) {
+          context.strokeStyle = `rgba(${r}, ${g}, ${b}, ${0.06 - distance / 3000})`;
           context.lineWidth = 1;
           context.beginPath();
           context.moveTo(particle.x, particle.y);
