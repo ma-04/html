@@ -246,6 +246,85 @@ button {
 .story {
   position: relative;
   z-index: 2;
+  padding-bottom: 7rem;
+}
+
+.design-dock {
+  position: fixed;
+  left: 50%;
+  bottom: 1rem;
+  z-index: 13;
+  width: min(1280px, calc(100vw - 1.5rem));
+  transform: translateX(-50%);
+  display: grid;
+  gap: 0.8rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 1.2rem;
+  background: rgba(255, 251, 243, 0.88);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 18px 44px rgba(44, 31, 19, 0.08);
+}
+
+.design-dock__meta {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+
+.design-dock__label,
+.design-dock__meta small {
+  color: var(--muted);
+  font: 700 0.68rem/1.3 "SFMono-Regular", "IBM Plex Mono", Consolas, monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.design-dock__actions,
+.design-dock__cluster {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.design-dock__actions {
+  justify-content: space-between;
+}
+
+.design-dock__link,
+.design-dock__pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.6rem;
+  padding: 0.72rem 0.95rem;
+  border: 1px solid rgba(20, 20, 20, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+  color: var(--ink);
+  text-decoration: none;
+  transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+}
+
+.design-dock__pill {
+  font-size: 0.88rem;
+}
+
+.design-dock__link:hover,
+.design-dock__link:focus-visible,
+.design-dock__pill:hover,
+.design-dock__pill:focus-visible,
+.design-dock__pill.is-active {
+  outline: none;
+  transform: translateY(-2px);
+  border-color: rgba(var(--accent-rgb), 0.24);
+  background: rgba(var(--accent-rgb), 0.14);
+}
+
+.design-dock__link--ghost {
+  background: transparent;
 }
 
 .chapter {
@@ -922,6 +1001,10 @@ input[type="range"] {
     padding-bottom: 9rem;
   }
 
+  .design-dock {
+    bottom: 5.75rem;
+  }
+
   .chapter__watermark {
     top: 5.8rem;
     right: 1.2rem;
@@ -991,6 +1074,15 @@ input[type="range"] {
     padding: 0.55rem;
   }
 
+  .design-dock {
+    width: calc(100vw - 1rem);
+    padding: 0.75rem;
+  }
+
+  .design-dock__actions {
+    justify-content: center;
+  }
+
   .rail__button {
     min-width: 7.3rem;
     padding: 0.62rem;
@@ -1003,6 +1095,181 @@ input[type="range"] {
   .scene-link {
     width: 100%;
   }
+}
+
+body.theme-blueprint {
+  --bg: #dfe8f2;
+  --bg-alt: #edf3f8;
+  --paper: rgba(252, 254, 255, 0.94);
+  --paper-strong: rgba(250, 253, 255, 0.98);
+  --ink: #14263d;
+  --muted: rgba(20, 38, 61, 0.6);
+  --line: rgba(20, 38, 61, 0.12);
+}
+
+body.theme-blueprint .shell-header,
+body.theme-blueprint .chapter-rail,
+body.theme-blueprint .design-dock {
+  border-radius: 0.8rem;
+  background:
+    linear-gradient(rgba(20, 38, 61, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20, 38, 61, 0.04) 1px, transparent 1px),
+    rgba(250, 253, 255, 0.88);
+  background-size: 18px 18px, 18px 18px, auto;
+}
+
+body.theme-blueprint .stage-card,
+body.theme-blueprint .metric-card,
+body.theme-blueprint .signal-panel,
+body.theme-blueprint .stack-card,
+body.theme-blueprint .sector-pane,
+body.theme-blueprint .boundary-pane,
+body.theme-blueprint .launch-pane,
+body.theme-blueprint .mini-card,
+body.theme-blueprint .launch-phase,
+body.theme-blueprint .bar-card {
+  border-radius: 0.8rem;
+}
+
+body.theme-blueprint .chapter__watermark {
+  font-family: "IBM Plex Mono", Consolas, monospace;
+  letter-spacing: -0.08em;
+  -webkit-text-stroke: 1px rgba(var(--chapter-accent-rgb), 0.12);
+}
+
+body.theme-blueprint .brand__mark {
+  border-radius: 0.4rem;
+}
+
+body.theme-monograph {
+  --bg: #ece7dd;
+  --bg-alt: #f6f2eb;
+  --paper: rgba(255, 252, 247, 0.95);
+  --paper-strong: rgba(255, 252, 247, 0.98);
+  --ink: #191817;
+  --muted: rgba(25, 24, 23, 0.56);
+  --line: rgba(25, 24, 23, 0.09);
+}
+
+body.theme-monograph .shell-header,
+body.theme-monograph .chapter-rail,
+body.theme-monograph .design-dock {
+  background: rgba(255, 252, 247, 0.78);
+  box-shadow: none;
+}
+
+body.theme-monograph .metric-card,
+body.theme-monograph .stage-card {
+  box-shadow: 0 18px 36px rgba(33, 24, 18, 0.05);
+}
+
+body.theme-monograph .chapter__watermark {
+  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  opacity: 0.58;
+  -webkit-text-stroke: 1px rgba(var(--chapter-accent-rgb), 0.08);
+}
+
+body.theme-monograph .chapter__title {
+  max-width: 11.5ch;
+  font-size: clamp(3.3rem, 6.4vw, 6.8rem);
+}
+
+body.theme-bulletin {
+  --bg: #e7d9cf;
+  --bg-alt: #f2e7df;
+  --paper: rgba(255, 248, 242, 0.94);
+  --paper-strong: rgba(255, 248, 242, 0.98);
+  --ink: #16110f;
+  --muted: rgba(22, 17, 15, 0.62);
+  --line: rgba(22, 17, 15, 0.12);
+}
+
+body.theme-bulletin .shell-header,
+body.theme-bulletin .chapter-rail,
+body.theme-bulletin .design-dock {
+  background: rgba(255, 244, 236, 0.9);
+  border-radius: 0.95rem;
+}
+
+body.theme-bulletin .stage-card,
+body.theme-bulletin .metric-card {
+  border-radius: 0.9rem;
+  box-shadow: 12px 12px 0 rgba(22, 17, 15, 0.05), var(--shadow);
+}
+
+body.theme-bulletin .chapter__eyebrow,
+body.theme-bulletin .launch-phase span {
+  border-radius: 0.4rem;
+}
+
+body.theme-bulletin .chapter__watermark {
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  opacity: 1;
+  -webkit-text-stroke: 1px rgba(var(--chapter-accent-rgb), 0.18);
+}
+
+body.theme-atelier {
+  --bg: #dfe8de;
+  --bg-alt: #edf3e9;
+  --paper: rgba(248, 251, 245, 0.94);
+  --paper-strong: rgba(250, 252, 247, 0.98);
+  --ink: #17211d;
+  --muted: rgba(23, 33, 29, 0.58);
+  --line: rgba(23, 33, 29, 0.1);
+}
+
+body.theme-atelier .shell-header,
+body.theme-atelier .chapter-rail,
+body.theme-atelier .design-dock {
+  background: rgba(248, 251, 245, 0.86);
+}
+
+body.theme-atelier .metric-card,
+body.theme-atelier .stage-card,
+body.theme-atelier .signal-panel,
+body.theme-atelier .stack-card,
+body.theme-atelier .sector-pane,
+body.theme-atelier .boundary-pane,
+body.theme-atelier .launch-pane,
+body.theme-atelier .mini-card,
+body.theme-atelier .launch-phase,
+body.theme-atelier .bar-card {
+  border-radius: 1.35rem;
+}
+
+body.theme-atelier .chapter__watermark {
+  opacity: 0.78;
+  -webkit-text-stroke: 1px rgba(var(--chapter-accent-rgb), 0.14);
+}
+
+body.theme-signal {
+  --bg: #dbede7;
+  --bg-alt: #eef7f3;
+  --paper: rgba(247, 255, 251, 0.93);
+  --paper-strong: rgba(247, 255, 251, 0.98);
+  --ink: #101818;
+  --muted: rgba(16, 24, 24, 0.58);
+  --line: rgba(16, 24, 24, 0.11);
+}
+
+body.theme-signal .shell-header,
+body.theme-signal .chapter-rail,
+body.theme-signal .design-dock {
+  background: rgba(247, 255, 251, 0.86);
+}
+
+body.theme-signal .chapter__watermark {
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  letter-spacing: -0.03em;
+  -webkit-text-stroke: 1px rgba(var(--chapter-accent-rgb), 0.22);
+}
+
+body.theme-signal .metric-card::before {
+  height: 0.45rem;
+}
+
+body.theme-ledger .chapter__watermark {
+  opacity: 0.9;
 }
 
 @media (prefers-reduced-motion: reduce) {

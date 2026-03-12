@@ -3,45 +3,50 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sovereign Model Systems</title>
-    <link rel="stylesheet" href="./styles.css" />
+    <title>Sovereign Model Systems / Design Browser</title>
+    <link rel="stylesheet" href="./assets/hub.css" />
+    <script src="./assets/design-catalog.js"></script>
+    <script defer src="./assets/hub.js"></script>
   </head>
   <body>
-    <canvas id="ambient" aria-hidden="true"></canvas>
-    <div class="noise" aria-hidden="true"></div>
-
-    <header class="shell-header">
-      <a class="brand" href="#chapter-core">
-        <span class="brand__mark"></span>
-        <span class="brand__text">
-          <strong>Sovereign Model Systems</strong>
-          <small>inside your VPC</small>
-        </span>
-      </a>
-
-      <div class="header-status">
-        <span class="header-status__index" data-active-index>01</span>
-        <div class="header-status__copy">
-          <strong data-active-title>Sovereign Core</strong>
-          <small>five scroll scenes</small>
+    <main class="page">
+      <header class="masthead">
+        <div class="brand">
+          <span class="brand__mark"></span>
+          <div class="brand__copy">
+            <strong>Sovereign Model Systems</strong>
+            <small>six editorial variants</small>
+          </div>
         </div>
-      </div>
+        <div class="meta">Deploy enterprise-grade, domain-specific LLMs within your own VPC.</div>
+      </header>
 
-      <div class="progress-track" aria-hidden="true">
-        <span class="progress-track__fill" data-progress></span>
-      </div>
-    </header>
+      <section class="hero">
+        <div class="hero__content">
+          <div>
+            <div class="meta">Approved direction expanded</div>
+            <h1>Five more designs built from the first editorial concept.</h1>
+            <p>
+              The original warm-paper concept is preserved as the base variant. Five additional
+              designs now explore adjacent treatments of the same idea: blueprint, monograph,
+              bulletin, atelier, and signal. They all keep the scroll-driven story architecture
+              and the dynamic interaction modules.
+            </p>
+          </div>
+          <div class="hero__notes">
+            <article class="note">
+              <strong>How to browse</strong>
+              <p>Open any design from the grid below, then use the fixed bottom variant browser or `Shift + Left/Right` to switch designs.</p>
+            </article>
+            <article class="note">
+              <strong>What stays consistent</strong>
+              <p>The message, page structure, dynamic calculators, boundary switchers, and rollout planner all remain consistent across the family.</p>
+            </article>
+          </div>
+        </div>
+      </section>
 
-    <nav class="chapter-rail" aria-label="Scene navigation" data-rail></nav>
-
-    <main id="app" class="story"></main>
-
-    <noscript>
-      <div class="no-script">
-        This page uses JavaScript to render the full scroll experience.
-      </div>
-    </noscript>
-
-    <script src="./app.js"></script>
+      <section class="grid" data-design-grid></section>
+    </main>
   </body>
 </html>

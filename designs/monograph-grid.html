@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Monograph Grid / Sovereign Model Systems</title>
+    <link rel="stylesheet" href="../assets/story.css" />
+    <script src="../assets/design-catalog.js"></script>
+    <script>
+      window.STORY_THEME_KEY = "monograph";
+    </script>
+    <script defer src="../assets/story-engine.js"></script>
+  </head>
+  <body>
+    <canvas id="ambient" aria-hidden="true"></canvas>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="shell-header">
+      <a class="brand" href="#chapter-core">
+        <span class="brand__mark"></span>
+        <span class="brand__text">
+          <strong>Sovereign Model Systems</strong>
+          <small data-design-name>Monograph Grid</small>
+        </span>
+      </a>
+
+      <div class="header-status">
+        <span class="header-status__index" data-active-index>01</span>
+        <div class="header-status__copy">
+          <strong data-active-title>Sovereign Core</strong>
+          <small data-design-note>Minimal executive print</small>
+        </div>
+      </div>
+
+      <div class="progress-track" aria-hidden="true">
+        <span class="progress-track__fill" data-progress></span>
+      </div>
+    </header>
+
+    <nav class="chapter-rail" aria-label="Scene navigation" data-rail></nav>
+    <main id="app" class="story"></main>
+    <nav class="design-dock" aria-label="Design browser" data-design-dock></nav>
+  </body>
+</html>

@@ -389,11 +389,42 @@ const launchDataset = {
   },
 };
 
+const designCatalog = window.STORY_DESIGNS || [];
+const currentKey = window.STORY_THEME_KEY || (designCatalog[0] && designCatalog[0].key);
+const currentDesign =
+  designCatalog.find((design) => design.key === currentKey) || designCatalog[0] || {
+    key: "ledger",
+    file: "solstice-ledger.html",
+    name: "Solstice Ledger",
+    note: "Warm editorial original",
+    className: "theme-ledger",
+  };
+
 const app = document.querySelector("#app");
 const rail = document.querySelector("[data-rail]");
+const designDock = document.querySelector("[data-design-dock]");
 const activeIndexNode = document.querySelector("[data-active-index]");
 const activeTitleNode = document.querySelector("[data-active-title]");
 const progressNode = document.querySelector("[data-progress]");
+const designNameNode = document.querySelector("[data-design-name]");
+const designNoteNode = document.querySelector("[data-design-note]");
+const designPageTitleNode = document.querySelector("[data-page-title]");
+
+document.body.classList.add(currentDesign.className);
+
+if (designNameNode) {
+  designNameNode.textContent = currentDesign.name;
+}
+
+if (designNoteNode) {
+  designNoteNode.textContent = currentDesign.note;
+}
+
+if (designPageTitleNode) {
+  designPageTitleNode.textContent = currentDesign.name;
+}
+
+document.title = `${currentDesign.name} / Sovereign Model Systems`;
 
 function renderStats(stats) {
   return stats
@@ -706,6 +737,41 @@ function renderApp() {
     .join("");
 }
 
+function renderDesignDock() {
+  if (!designDock || !designCatalog.length) {
+    return;
+  }
+
+  const currentIndex = designCatalog.findIndex((design) => design.key === currentDesign.key);
+  const previous =
+    designCatalog[(currentIndex - 1 + designCatalog.length) % designCatalog.length];
+  const next = designCatalog[(currentIndex + 1) % designCatalog.length];
+
+  designDock.innerHTML = `
+    <div class="design-dock__meta">
+      <span class="design-dock__label">Variant family</span>
+      <strong>${currentDesign.name}</strong>
+      <small>${currentDesign.note}</small>
+    </div>
+    <div class="design-dock__actions">
+      <a class="design-dock__link design-dock__link--ghost" href="../index.html">All designs</a>
+      <a class="design-dock__link design-dock__link--ghost" href="./${previous.file}">Prev</a>
+      <div class="design-dock__cluster">
+        ${designCatalog
+          .map(
+            (design) => `
+              <a class="design-dock__pill ${design.key === currentDesign.key ? "is-active" : ""}" href="./${design.file}">
+                ${design.name}
+              </a>
+            `
+          )
+          .join("")}
+      </div>
+      <a class="design-dock__link" href="./${next.file}">Next</a>
+    </div>
+  `;
+}
+
 function scrollToChapter(id) {
   const node = document.getElementById(id);
   if (node) {
@@ -773,6 +839,34 @@ function initNavigation() {
       return;
     }
     scrollToChapter(trigger.dataset.scroll);
+  });
+
+  window.addEventListener("keydown", (event) => {
+    const active = document.activeElement;
+    const tag = active ? active.tagName : "";
+    const isEditable =
+      active &&
+      (active.isContentEditable ||
+        tag === "INPUT" ||
+        tag === "TEXTAREA" ||
+        tag === "SELECT" ||
+        tag === "BUTTON");
+
+    if (isEditable || !designCatalog.length) {
+      return;
+    }
+
+    const currentIndex = designCatalog.findIndex((design) => design.key === currentDesign.key);
+
+    if (event.shiftKey && event.key === "ArrowLeft") {
+      const previous = designCatalog[(currentIndex - 1 + designCatalog.length) % designCatalog.length];
+      window.location.href = `./${previous.file}`;
+    }
+
+    if (event.shiftKey && event.key === "ArrowRight") {
+      const next = designCatalog[(currentIndex + 1) % designCatalog.length];
+      window.location.href = `./${next.file}`;
+    }
   });
 }
 
@@ -1162,6 +1256,7 @@ function initAmbient() {
 }
 
 renderApp();
+renderDesignDock();
 initNavigation();
 initSectorModule();
 initBoundaryModule();
